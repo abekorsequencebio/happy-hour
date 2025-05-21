@@ -3,13 +3,13 @@
 one:
   restaurant: one
   day: MyString
-  start_time: 2025-05-21 20:18:45
-  end_time: 2025-05-21 20:18:45
+  start_time: 2025-05-21 20:44:49
+  end_time: 2025-05-21 20:44:49
   description: MyText
 
 two:
   restaurant: two
   day: MyString
-  start_time: 2025-05-21 20:18:45
-  end_time: 2025-05-21 20:18:45
+  start_time: 2025-05-21 20:44:49
+  end_time: 2025-05-21 20:44:49
   description: MyText

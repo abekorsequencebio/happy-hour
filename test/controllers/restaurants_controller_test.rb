@@ -1,38 +1,38 @@
 require "test_helper"
 
-class RestaurantControllerTest < ActionDispatch::IntegrationTest
+class RestaurantsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
-    get restaurant_index_url
+    get restaurants_index_url
     assert_response :success
   end
 
   test "should get show" do
-    get restaurant_show_url
+    get restaurants_show_url
     assert_response :success
   end
 
   test "should get new" do
-    get restaurant_new_url
+    get restaurants_new_url
     assert_response :success
   end
 
   test "should get create" do
-    get restaurant_create_url
+    get restaurants_create_url
     assert_response :success
   end
 
   test "should get edit" do
-    get restaurant_edit_url
+    get restaurants_edit_url
     assert_response :success
   end
 
   test "should get update" do
-    get restaurant_update_url
+    get restaurants_update_url
     assert_response :success
   end
 
   test "should get destroy" do
-    get restaurant_destroy_url
+    get restaurants_destroy_url
     assert_response :success
   end
 end

@@ -27,7 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_224845) do
   end
 
   create_table "restaurants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.string "address"
     t.string "phone"
     t.string "website"

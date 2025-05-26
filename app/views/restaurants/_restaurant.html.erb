@@ -2,22 +2,16 @@
   <div class="mb-10 px-4 py-8">
     <h2 class="text-2xl font-semibold text-blue-800 mb-2"><%= restaurant.name %></h2>
     <p class="text-gray-500 mb-4"><%= restaurant.address %> | <%= restaurant.phone %></p>
+    <% if restaurant.website.present? %>
+      <a href="<%= restaurant.website %>" class="text-sm text-blue-500 hover:underline mb-4 inline-block" target="_blank" rel="noopener">
+        Visit Website
+      </a>
+    <% end %>
     <% restaurant.deals.group_by(&:day).each do |day, deals| %>
       <div class="mb-4">
         <h3 class="text-xl font-bold text-gray-700 mb-2"><%= day %></h3>
         <div>
-          <% deals.each do |deal| %>
-            <div class="bg-white shadow rounded-xl p-4">
-              <p class="text-gray-800"><%= deal.description %></p>
-              <% debugger %>
-              <p class="text-xs text-gray-500"><%= presenter.timestamps %></p>
-              <% if restaurant.website.present? %>
-                <a href="<%= restaurant.website %>" class="text-sm text-blue-500 mt-2 inline-block" target="_blank" rel="noopener">
-                  Visit Website
-                </a>
-              <% end %>
-            </div>
-          <% end %>
+          <%= render partial: "deals/deal", collection: deals, as: :deal %>
         </div>
       </div>
     <% end %>

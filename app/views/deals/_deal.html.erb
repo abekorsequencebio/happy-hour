@@ -1,0 +1,6 @@
+<% present deal, DealPresenter do |presenter| %>
+  <div class="bg-white shadow rounded-xl p-4">
+    <p class="text-gray-800"><%= deal.description %></p>
+    <p class="text-xs text-gray-500"><%= presenter.timestamp %></p>
+  </div>
+<% end %>

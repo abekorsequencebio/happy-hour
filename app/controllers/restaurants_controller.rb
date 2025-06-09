@@ -1,12 +1,13 @@
 class RestaurantsController < ApplicationController
   before_action :set_restaurant, only: [:show, :edit, :update, :destroy]
+
   def index
-    @restaurants = Restaurant.order(created_at: :asc)
+    @restaurants = Restaurant.includes(:deals)
   end
 
   def show
-    @restaurant = Restaurant.find(params[:id])
-    @deals = @restaurant.deals
+    # @restaurant is set by the before_action
+    @deals_by_day = @restaurant.deals.group_by(&:day)
   end
 
   def new
@@ -16,61 +17,44 @@ class RestaurantsController < ApplicationController
   def create
     @restaurant_form = RestaurantForm.new(restaurant_params)
     if @restaurant_form.save
-      flash[:notice] = "Restaurant created successfully."
-      redirect_to restaurants_path
+      redirect_to restaurants_path, notice: "Restaurant created successfully."
     else
       flash.now[:alert] = "Error creating restaurant."
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @restaurant_form = RestaurantForm.new(restaurant: @restaurant, **@restaurant.slice(:name, :address, :phone, :website))
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Restaurant not found."
-    redirect_to restaurants_path
+    @restaurant_form = RestaurantForm.new(
+      restaurant: @restaurant,
+      **@restaurant.attributes.slice("name", "address", "phone", "website")
+    )
   end
 
   def update
     @restaurant_form = RestaurantForm.new(restaurant_params.merge(restaurant: @restaurant))
     if @restaurant_form.save
-      flash[:notice] = "Restaurant updated successfully."
-      redirect_to restaurants_path
+      redirect_to restaurants_path, notice: "Restaurant updated successfully."
     else
       flash.now[:alert] = "Error updating restaurant."
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Restaurant not found."
-    redirect_to restaurants_path
   end
 
   def destroy
     @restaurant.destroy
-    flash[:notice] = "Restaurant deleted successfully."
-    redirect_to restaurants_path
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Restaurant not found."
-    redirect_to restaurants_path
-  rescue ActiveRecord::DeleteRestrictionError
-    flash[:alert] = "Cannot delete restaurant with associated deals."
-    redirect_to restaurant_path(@restaurant)
-  rescue StandardError => e
-    flash[:alert] = "An error occurred while deleting the restaurant: #{e.message}"
-    redirect_to restaurant_path(@restaurant)
+    redirect_to restaurants_path, notice: "Restaurant deleted successfully.", status: :see_other
   end
 
   private
+
   def set_restaurant
     @restaurant = Restaurant.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Restaurant not found."
-    redirect_to restaurants_path
+    redirect_to restaurants_path, alert: "Restaurant not found."
   end
 
   def restaurant_params
-    params.require(:restaurant_form).permit(
-      :name, :address, :phone, :website
-    ).to_h
+    params.require(:restaurant_form).permit(:name, :address, :phone, :website)
   end
 end

@@ -1,24 +1,4 @@
-<div class="max-w-xl mx-auto py-12 px-4">
+<div class="max-w-xl mx-auto">
   <h1 class="text-3xl font-bold mb-8 text-center text-gray-900">Add New Restaurant</h1>
-  <%= form_with model: @restaurant_form, url: restaurants_path, method: :post, class: "space-y-6" do |f| %>
-    <div>
-      <%= f.label :name, "Restaurant Name", class: "block text-sm font-medium text-gray-700" %>
-      <%= f.text_field :name, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
-    </div>
-    <div>
-      <%= f.label :address, class: "block text-sm font-medium text-gray-700" %>
-      <%= f.text_field :address, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
-    </div>
-    <div>
-      <%= f.label :phone, class: "block text-sm font-medium text-gray-700" %>
-      <%= f.telephone_field :phone, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
-    </div>
-    <div>
-      <%= f.label :website, class: "block text-sm font-medium text-gray-700" %>
-      <%= f.url_field :website, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
-    </div>
-    <div class="pt-4">
-      <%= f.submit "Create Restaurant", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition" %>
-    </div>
-  <% end %>
+  <%= render 'form', restaurant_form: @restaurant_form %>
 </div>

@@ -1,67 +1,60 @@
 class DealsController < ApplicationController
-  def index
-
-  end
-
-  def show
-  end
+  before_action :set_deal, only: [:edit, :update, :destroy]
+  before_action :set_restaurant, only: [:new, :create]
 
   def new
-    @deal = Deal.new
+    @deal_form = DealForm.new(restaurant_id: @restaurant.id)
   end
 
   def create
-    @deal = Deal.new(deal_params)
-    if @deal.save
-      flash[:notice] = "Deal created successfully."
-      redirect_to restaurants_path
+    @deal_form = DealForm.new(deal_params.merge(restaurant_id: @restaurant.id))
+    if @deal_form.save
+      redirect_to restaurant_path(@restaurant), notice: "Deal created successfully."
     else
       flash.now[:alert] = "Error creating deal."
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @deal = Deal.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Deal not found."
-    redirect_to restaurants_path
+    @deal_form = DealForm.new(
+      deal: @deal,
+      **@deal.attributes.slice("restaurant_id", "day", "start_time", "end_time", "description")
+    )
   end
 
   def update
-    @deal = Deal.find(params[:id])
-    if @deal.update(deal_params)
-      flash[:notice] = "Deal updated successfully."
-      redirect_to restaurants_path
+    @deal_form = DealForm.new(deal_params.merge(deal: @deal))
+    if @deal_form.save
+      redirect_to restaurant_path(@deal.restaurant), notice: "Deal updated successfully."
     else
       flash.now[:alert] = "Error updating deal."
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Deal not found."
-    redirect_to restaurants_path
-  rescue ActiveRecord::RecordInvalid => e
-    flash.now[:alert] = "Error updating deal: #{e.message}"
-    render :edit
   end
 
   def destroy
-    @deal = Deal.find(params[:id])
+    restaurant = @deal.restaurant
     @deal.destroy
-    flash[:notice] = "Deal deleted successfully."
-    redirect_to restaurants_path
-  rescue ActiveRecord::RecordNotFound
-    flash[:alert] = "Deal not found."
-    redirect_to restaurants_path
-  rescue ActiveRecord::DeleteRestrictionError
-    flash[:alert] = "Cannot delete deal with associated records."
-    redirect_to restaurants_path
-  rescue StandardError => e
-    flash[:alert] = "An error occurred while deleting the deal: #{e.message}"
-    redirect_to restaurants_path
+    redirect_to restaurant_path(restaurant), notice: "Deal deleted successfully.", status: :see_other
   end
+
   private
+
+  def set_deal
+    @deal = Deal.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to restaurants_path, alert: "Deal not found."
+  end
+
+  def set_restaurant
+    restaurant_id = params[:restaurant_id] || deal_params[:restaurant_id]
+    @restaurant = Restaurant.find(restaurant_id)
+  rescue ActiveRecord::RecordNotFound
+    redirect_to restaurants_path, alert: "Associated restaurant not found."
+  end
+
   def deal_params
-    params.require(:deal).permit(:restaurant_id, :day, :start_time, :end_time, :description).to_h
+    params.require(:deal_form).permit(:day, :start_time, :end_time, :description, :restaurant_id)
   end
 end

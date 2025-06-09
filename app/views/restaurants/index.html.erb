@@ -1,0 +1,12 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6 text-center">Restaurants</h1>
+  <div class="mb-6 text-center">
+    <%= link_to new_restaurant_path, class: "items-center gap-2 text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl transition" do %>
+      <i class="ph ph-plus text-lg"></i>
+      <span>New Restaurant</span>
+    <% end %>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <%= render partial: 'restaurants/restaurant', collection: @restaurants, as: :restaurant %>
+  </div>
+</div>

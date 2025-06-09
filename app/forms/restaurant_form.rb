@@ -1,11 +1,13 @@
 class RestaurantForm
   include ActiveModel::Model
-  include Virtus.model
+  include ActiveModel::Attributes
 
-  attribute :name
-  attribute :address
-  attribute :phone
-  attribute :website
+  attr_accessor :restaurant
+  attribute :restaurant
+  attribute :name, :string
+  attribute :address, :string
+  attribute :phone, :string
+  attribute :website, :string
 
   validates :name, presence: true
 
